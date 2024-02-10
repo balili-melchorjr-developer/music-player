@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework import generics, viewsets, permissions
-from .serializers import RoomSerializer, ProjectSerializer
-from .models import Room, Project
+from .serializers import RoomSerializer, ProjectSerializer, ProjectManagerSerializer
+from .models import Room, Project, ProjectManager
 from rest_framework.response import Response
 
 # Create your views here.
@@ -9,6 +9,16 @@ from rest_framework.response import Response
 class RoomView(generics.ListAPIView):
     queryset = Room.objects.all()
     serializer_class = RoomSerializer
+
+class ProjectManagerViewset(viewsets.ViewSet):
+    permission_classes = [permissions.AllowAny]
+    queryset = ProjectManager.objects.all()
+    serializer_class = ProjectManagerSerializer
+
+    def list(self, request):
+        queryset =ProjectManager.objects.all()
+        serializer = self.serializer_class(queryset, many=True)
+        return Response(serializer.data)
 
 class ProjectViewset(viewsets.ViewSet):
     permission_classes = [permissions.AllowAny]
